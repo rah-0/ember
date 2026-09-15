@@ -1,0 +1,1351 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+            name="description"
+            content="Try Ember notifications: themes, positioning, custom content, actions, timers, and lifecycle controls."
+        />
+        <title>Ember — Examples</title>
+        <link rel="icon" href="data:," />
+        <style>
+            :root {
+                color-scheme: light;
+                font-family: system-ui, sans-serif;
+                color: #292923;
+                background: #f7f6f2;
+                font-synthesis: none;
+                text-rendering: optimizeLegibility;
+                --accent: #ad3c18;
+                --muted: #6e6e63;
+                --border: #e2e1d9;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+            }
+            a {
+                color: inherit;
+                text-underline-offset: 4px;
+            }
+            button,
+            select,
+            input {
+                font: inherit;
+            }
+            .button,
+            select {
+                min-height: 40px;
+            }
+            button {
+                cursor: pointer;
+            }
+            button:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
+            :focus-visible {
+                outline: 3px solid #ad3c18;
+                outline-offset: 4px;
+            }
+            .shell {
+                width: min(1180px, calc(100% - 64px));
+                margin-inline: auto;
+            }
+            header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 24px;
+                padding-block: 27px;
+                border-bottom: 1px solid var(--border);
+            }
+            .wordmark {
+                font-size: 27px;
+                font-weight: 750;
+                letter-spacing: -1.5px;
+                text-decoration: none;
+            }
+            .wordmark span {
+                color: var(--accent);
+            }
+            .header-links {
+                display: flex;
+                gap: 24px;
+                font-size: 14px;
+                color: var(--muted);
+            }
+            .hero {
+                display: grid;
+                grid-template-columns: 1.1fr 1fr;
+                gap: 64px;
+                align-items: center;
+                padding-block: 72px 58px;
+            }
+            .eyebrow {
+                margin: 0 0 18px;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 1.8px;
+                text-transform: uppercase;
+                color: var(--accent);
+            }
+            h1 {
+                margin: 0 0 22px;
+                max-width: 540px;
+                font-size: clamp(44px, 5.3vw, 68px);
+                line-height: 1.04;
+                font-weight: 650;
+                letter-spacing: -3px;
+            }
+            .intro {
+                max-width: 465px;
+                margin: 0;
+                color: var(--muted);
+                font-size: 17px;
+                line-height: 1.7;
+            }
+            .intro strong {
+                color: #292923;
+                font-weight: 550;
+            }
+            .quickstart {
+                min-width: 0;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                background: #fff;
+            }
+            .quickstart-label {
+                padding: 14px 20px;
+                border-bottom: 1px solid #edede6;
+                font-size: 11px;
+                color: var(--muted);
+                font-weight: 650;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
+            pre {
+                margin: 0;
+                overflow-x: auto;
+                white-space: pre;
+                tab-size: 4;
+            }
+            code {
+                font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+            }
+            .quickstart pre {
+                max-height: 320px;
+                padding: 22px 20px;
+                font-size: 12px;
+                line-height: 1.85;
+                color: #44443b;
+            }
+            .quickstart-note {
+                margin: 0;
+                padding: 0 20px 18px;
+                color: var(--muted);
+                font-size: 12px;
+            }
+            .toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                justify-content: space-between;
+                gap: 18px;
+                padding-block: 18px;
+                border-block: 1px solid var(--border);
+            }
+            .section-nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px 21px;
+                font-size: 13px;
+                font-weight: 550;
+            }
+            .section-nav a {
+                text-decoration: none;
+                padding-block: 5px;
+            }
+            .section-nav a:hover {
+                color: var(--accent);
+            }
+            .page-actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .button {
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: #fff;
+                color: #292923;
+                padding: 9px 14px;
+                font-size: 12px;
+                font-weight: 550;
+            }
+            .button:hover:not(:disabled) {
+                border-color: #bab9ad;
+                background: #faf9f6;
+            }
+            .button.primary {
+                border-color: var(--accent);
+                background: var(--accent);
+                color: #fff;
+            }
+            .button.primary:hover:not(:disabled) {
+                background: #8f3012;
+                border-color: #8f3012;
+            }
+            .status-row {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 8px 20px;
+                min-height: 58px;
+                padding-block: 16px;
+            }
+            #status {
+                margin: 0;
+                font-size: 12px;
+                color: var(--muted);
+            }
+            #status[data-error="true"] {
+                color: #a22b24;
+            }
+            .status-hint {
+                margin: 0;
+                color: var(--muted);
+                font-size: 12px;
+            }
+            .example-section {
+                padding-block: 34px 12px;
+                scroll-margin-top: 24px;
+            }
+            .section-heading {
+                display: flex;
+                gap: 16px;
+                align-items: baseline;
+                margin-bottom: 22px;
+            }
+            .section-number {
+                color: var(--accent);
+                font-family: ui-monospace, monospace;
+                font-size: 12px;
+            }
+            h2 {
+                margin: 0;
+                font-size: 25px;
+                line-height: 1.3;
+                font-weight: 600;
+                letter-spacing: -0.7px;
+            }
+            .section-description {
+                margin: 8px 0 0;
+                font-size: 14px;
+                line-height: 1.6;
+                color: var(--muted);
+            }
+            .example-grid {
+                display: grid;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 16px;
+                align-items: start;
+            }
+            .example-card {
+                min-width: 0;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: #fff;
+            }
+            .card-body {
+                padding: 23px 23px 20px;
+            }
+            .card-marker {
+                width: 8px;
+                height: 8px;
+                margin-bottom: 18px;
+                border-radius: 50%;
+                background: var(--marker, #8d8d81);
+            }
+            h3 {
+                margin: 0;
+                font-size: 16px;
+                font-weight: 650;
+                letter-spacing: -0.25px;
+            }
+            .card-description {
+                min-height: 60px;
+                margin: 10px 0 18px;
+                color: var(--muted);
+                font-size: 13px;
+                line-height: 1.6;
+            }
+            .card-controls {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px;
+            }
+            .select-label {
+                display: flex;
+                min-width: 0;
+                flex: 1;
+                align-items: center;
+                gap: 8px;
+                color: var(--muted);
+                font-size: 12px;
+            }
+            select {
+                width: 100%;
+                min-width: 0;
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                padding: 8px;
+                background: #fff;
+                color: #292923;
+                font-size: 12px;
+            }
+            .code-details {
+                border-top: 1px solid #edede6;
+                background: #fcfcfa;
+            }
+            .code-details summary {
+                padding: 13px 23px;
+                color: var(--muted);
+                font-size: 12px;
+                cursor: pointer;
+            }
+            .code-details[open] summary {
+                border-bottom: 1px solid #edede6;
+            }
+            .code-actions {
+                display: flex;
+                justify-content: flex-end;
+                padding: 12px 15px 0;
+            }
+            .copy-button {
+                min-height: 30px;
+                padding: 5px 9px;
+                font-size: 11px;
+            }
+            .code-details pre {
+                max-width: 100%;
+                padding: 14px 20px 20px;
+                color: #44443b;
+                font-size: 11px;
+                line-height: 1.8;
+            }
+            .target-panel {
+                margin-top: 16px;
+                padding: 22px;
+                border: 1px dashed #c9c7bb;
+                border-radius: 10px;
+            }
+            .target-label {
+                margin: 0 0 8px;
+                font-size: 11px;
+                font-weight: 650;
+                color: var(--muted);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            #target-area {
+                min-height: 92px;
+            }
+            .target-hint {
+                margin: 12px 0 0;
+                font-size: 12px;
+                line-height: 1.6;
+                color: var(--muted);
+            }
+            .events {
+                margin-block: 44px;
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                background: #fff;
+            }
+            .events summary {
+                padding: 18px 22px;
+                font-size: 13px;
+                cursor: pointer;
+            }
+            #event-log {
+                margin: 0;
+                padding: 0 22px 18px;
+                list-style: none;
+                color: var(--muted);
+                font-family: ui-monospace, monospace;
+                font-size: 11px;
+                line-height: 1.9;
+                overflow-wrap: anywhere;
+            }
+            footer {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                gap: 12px;
+                padding-block: 24px 36px;
+                border-top: 1px solid var(--border);
+                color: var(--muted);
+                font-size: 12px;
+            }
+            @media (max-width: 960px) {
+                .hero {
+                    gap: 32px;
+                }
+                .example-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+            }
+            @media (max-width: 640px) {
+                .shell {
+                    width: calc(100% - 32px);
+                }
+                header {
+                    padding-block: 20px;
+                }
+                .header-links {
+                    gap: 16px;
+                    font-size: 12px;
+                }
+                .hero {
+                    grid-template-columns: minmax(0, 1fr);
+                    gap: 28px;
+                    padding-block: 44px 32px;
+                }
+                h1 {
+                    letter-spacing: -2px;
+                }
+                .intro {
+                    font-size: 15px;
+                }
+                .section-nav {
+                    gap: 8px 16px;
+                }
+                .example-grid {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+                .card-description {
+                    min-height: 0;
+                }
+                .example-section {
+                    padding-top: 28px;
+                }
+                .status-hint {
+                    display: none;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="shell">
+            <header>
+                <a class="wordmark" href="#" aria-label="Ember home"
+                    >Ember<span>.</span></a
+                >
+                <div class="header-links">
+                    <a href="https://github.com/rah-0/ember#readme"
+                        >Documentation</a
+                    >
+                    <a href="https://github.com/rah-0/ember">GitHub ↗</a>
+                </div>
+            </header>
+            <main>
+                <section class="hero" aria-labelledby="page-title">
+                    <div>
+                        <p class="eyebrow">
+                            Small notifications. Plenty of possibilities.
+                        </p>
+                        <h1 id="page-title">Make it a toast.</h1>
+                        <p class="intro">
+                            A little feedback goes a long way. Explore
+                            <strong>23 working examples</strong>, from a quick
+                            confirmation to custom content and controls. One
+                            JavaScript file, with styles built in.
+                        </p>
+                    </div>
+                    <div class="quickstart">
+                        <div class="quickstart-label">Start here</div>
+                        <pre><code>&lt;script type="module"&gt;
+    const response = await fetch(
+        "https://raw.githubusercontent.com/rah-0/ember/master/Ember.js"
+    );
+    if (!response.ok) throw new Error("Could not load Ember.");
+    const url = URL.createObjectURL(new Blob(
+        [await response.text()], {type: "text/javascript"}
+    ));
+    try {
+        await import(url);
+    } finally {
+        URL.revokeObjectURL(url);
+    }
+    Ember.Success({
+        title: "Saved",
+        message: "Your changes are ready."
+    });
+&lt;/script&gt;</code></pre>
+                        <p class="quickstart-note">
+                            Add this after your page content. No CSS file
+                            required.
+                        </p>
+                    </div>
+                </section>
+                <div class="toolbar">
+                    <nav class="section-nav" aria-label="Example categories">
+                        <a href="#basics">Basics</a>
+                        <a href="#layout">Layout</a>
+                        <a href="#appearance">Appearance</a>
+                        <a href="#interaction">Interaction</a>
+                        <a href="#state">State</a>
+                    </nav>
+                    <div class="page-actions">
+                        <button class="button" id="clear-toasts" type="button">
+                            Clear toasts
+                        </button>
+                        <button
+                            class="button"
+                            id="reset-defaults"
+                            type="button"
+                        >
+                            Reset defaults
+                        </button>
+                    </div>
+                </div>
+                <div class="status-row">
+                    <p id="status" role="status">Loading Ember…</p>
+                    <p class="status-hint">
+                        Run an example, then open its code.
+                    </p>
+                </div>
+                <div id="gallery"></div>
+                <details class="events">
+                    <summary>Lifecycle events</summary>
+                    <ul
+                        id="event-log"
+                        aria-label="Recent notification lifecycle events"
+                    >
+                        <li>Run an example to see its lifecycle.</li>
+                    </ul>
+                </details>
+            </main>
+            <footer>
+                <span>Ember · Feedback, with a little warmth.</span>
+                <a href="https://github.com/rah-0/ember#api"
+                    >Explore the API ↗</a
+                >
+            </footer>
+        </div>
+        <script>
+            (async () => {
+                "use strict";
+
+                const sections = [
+                    {
+                        id: "basics",
+                        title: "The essentials",
+                        description:
+                            "Six built-in types for everyday feedback.",
+                    },
+                    {
+                        id: "layout",
+                        title: "Find the right place",
+                        description:
+                            "Control placement, reading direction, and where notifications live.",
+                    },
+                    {
+                        id: "appearance",
+                        title: "Make it feel at home",
+                        description:
+                            "Choose a theme, adjust the details, and try a little motion.",
+                    },
+                    {
+                        id: "interaction",
+                        title: "Give it something to do",
+                        description:
+                            "Add actions, gather input, and put the timer in your hands.",
+                    },
+                    {
+                        id: "state",
+                        title: "Keep things in order",
+                        description:
+                            "Handle repeated messages, cancellation, and reusable defaults.",
+                    },
+                ];
+
+                const examples = [
+                    {
+                        id: "basic",
+                        section: "basics",
+                        title: "Just a message",
+                        description:
+                            "A neutral notification. Titles are optional; a few useful words are enough.",
+                        marker: "#8d8d81",
+                        run: () => {
+                            return Ember.Show({
+                                message:
+                                    "A little update, right when you need it.",
+                            });
+                        },
+                    },
+                    {
+                        id: "success",
+                        section: "basics",
+                        title: "Success",
+                        description:
+                            "Let someone know their action worked, with a built-in icon and color.",
+                        marker: "#52865f",
+                        run: () => {
+                            return Ember.Success({
+                                title: "Saved",
+                                message: "Your changes are ready.",
+                            });
+                        },
+                    },
+                    {
+                        id: "info",
+                        section: "basics",
+                        title: "Information",
+                        description:
+                            "A friendly heads-up that keeps the page moving.",
+                        marker: "#5083a0",
+                        run: () => {
+                            return Ember.Info({
+                                title: "Update available",
+                                message:
+                                    "A new version is ready whenever you are.",
+                            });
+                        },
+                    },
+                    {
+                        id: "warning",
+                        section: "basics",
+                        title: "Warning",
+                        description:
+                            "Draw attention to something worth checking before the next step.",
+                        marker: "#be873f",
+                        run: () => {
+                            return Ember.Warning({
+                                title: "Unsaved changes",
+                                message:
+                                    "Save your work before leaving this page.",
+                            });
+                        },
+                    },
+                    {
+                        id: "error",
+                        section: "basics",
+                        title: "Error",
+                        description:
+                            "Explain what happened and give a clear next step.",
+                        marker: "#b95653",
+                        run: () => {
+                            return Ember.Error({
+                                title: "Connection lost",
+                                message:
+                                    "Check your connection, then try again.",
+                            });
+                        },
+                    },
+                    {
+                        id: "question",
+                        section: "basics",
+                        title: "Question",
+                        description:
+                            "A different visual tone for a prompt or a moment of consideration.",
+                        marker: "#afa143",
+                        run: () => {
+                            return Ember.Question({
+                                title: "Ready for a break?",
+                                message:
+                                    "Your work will be here when you return.",
+                            });
+                        },
+                    },
+                    {
+                        id: "position",
+                        section: "layout",
+                        title: "Seven positions",
+                        description:
+                            "Pick an edge or the center. On small screens, Ember centers notifications to fit.",
+                        select: {
+                            id: "position",
+                            label: "Position",
+                            values: [
+                                "top-left",
+                                "top-center",
+                                "top-right",
+                                "bottom-left",
+                                "bottom-center",
+                                "bottom-right",
+                                "center",
+                            ],
+                            value: "bottom-right",
+                        },
+                        run: () => {
+                            const position =
+                                document.querySelector("#position").value;
+                            return Ember.Info({
+                                title: "Right here",
+                                message: position,
+                                position,
+                            });
+                        },
+                    },
+                    {
+                        id: "stacked",
+                        section: "layout",
+                        title: "Room for the details",
+                        description:
+                            "Stack the title above the message and set a comfortable width for longer text.",
+                        run: () => {
+                            return Ember.Info({
+                                title: "Everything is up to date",
+                                message:
+                                    "Your latest changes have been saved. You can close this page and pick up where you left off the next time you visit.",
+                                layout: "stacked",
+                                maxWidth: 380,
+                            });
+                        },
+                    },
+                    {
+                        id: "rtl",
+                        section: "layout",
+                        title: "Right to left",
+                        description:
+                            "Set the reading direction for Arabic, Hebrew, and other right-to-left content.",
+                        run: () => {
+                            return Ember.Success({
+                                title: "تم الحفظ",
+                                message: "تم حفظ التغييرات بنجاح.",
+                                direction: "rtl",
+                                layout: "stacked",
+                            });
+                        },
+                    },
+                    {
+                        id: "target",
+                        section: "layout",
+                        title: "Inside a container",
+                        description:
+                            "Keep feedback next to the work. This toast appears in the panel below this section.",
+                        run: () => {
+                            return Ember.Info({
+                                title: "A local update",
+                                message:
+                                    "This notification belongs to this panel.",
+                                target: document.querySelector("#target-area"),
+                                duration: 0,
+                                newestFirst: true,
+                            });
+                        },
+                    },
+                    {
+                        id: "themes",
+                        section: "appearance",
+                        title: "Light and dark",
+                        description:
+                            "Compare both built-in themes. Each notification can choose its own theme.",
+                        run: () => {
+                            return [
+                                Ember.Info({
+                                    title: "Light theme",
+                                    message: "A brighter bit of feedback.",
+                                    theme: "light",
+                                    position: "top-left",
+                                }),
+                                Ember.Info({
+                                    title: "Dark theme",
+                                    message: "A quieter look after hours.",
+                                    theme: "dark",
+                                    position: "top-right",
+                                }),
+                            ];
+                        },
+                    },
+                    {
+                        id: "styled",
+                        section: "appearance",
+                        title: "Your own finish",
+                        description:
+                            "Use the toast element to inherit the page font and customize individual styles.",
+                        run: () => {
+                            const toast = Ember.Show({
+                                title: "Made to fit",
+                                message:
+                                    "Your font, your colors, your finishing touches.",
+                                layout: "stacked",
+                                color: "#f7dfcc",
+                            });
+                            Object.assign(toast.Element.style, {
+                                fontFamily: "inherit",
+                                borderRadius: "14px",
+                                boxShadow: "0 8px 30px rgba(80, 45, 20, 0.15)",
+                            });
+                            toast.Element.querySelector(
+                                ".ember-title",
+                            ).style.color = "#843b20";
+                            return toast;
+                        },
+                    },
+                    {
+                        id: "icon",
+                        section: "appearance",
+                        title: "A custom icon",
+                        description:
+                            "Pass a fresh DOM element as an icon. Or set icon to false to hide it entirely.",
+                        run: () => {
+                            const icon = document.createElement("span");
+                            icon.textContent = "★";
+                            icon.setAttribute("aria-hidden", "true");
+                            Object.assign(icon.style, {
+                                color: "#94691f",
+                                fontSize: "23px",
+                                lineHeight: "1",
+                            });
+                            return Ember.Show({
+                                title: "A new favorite",
+                                message: "Saved to your collection.",
+                                icon,
+                            });
+                        },
+                    },
+                    {
+                        id: "animation",
+                        section: "appearance",
+                        title: "A little motion",
+                        description:
+                            "Try five animation options. Ember respects your browser's reduced-motion preference.",
+                        select: {
+                            id: "animation",
+                            label: "Animation",
+                            values: ["slide", "fade", "bounce", "flip", "none"],
+                            value: "slide",
+                        },
+                        run: () => {
+                            const animation =
+                                document.querySelector("#animation").value;
+                            return Ember.Success({
+                                title: "Making an entrance",
+                                message: animation,
+                                animation,
+                                animationDuration: 500,
+                            });
+                        },
+                    },
+                    {
+                        id: "undo",
+                        section: "interaction",
+                        title: "An action to undo",
+                        description:
+                            "Keep a notification open until its action or close button is used.",
+                        run: () => {
+                            return Ember.Show({
+                                title: "Item archived",
+                                message: "Changed your mind?",
+                                duration: 0,
+                                actions: [
+                                    {
+                                        label: "Undo",
+                                        onClick: ({ toast }) => {
+                                            toast.Close("undo");
+                                            Ember.Info({
+                                                title: "Restored",
+                                                message:
+                                                    "The item is back where it was.",
+                                            });
+                                        },
+                                    },
+                                ],
+                            });
+                        },
+                    },
+                    {
+                        id: "confirm",
+                        section: "interaction",
+                        title: "Ask for confirmation",
+                        description:
+                            "Add an overlay and explicit actions. Escape or a click outside also dismisses it.",
+                        run: () => {
+                            return Ember.Question({
+                                title: "Continue?",
+                                message:
+                                    "You can review your changes before the next step.",
+                                position: "center",
+                                duration: 0,
+                                overlay: {
+                                    color: "rgba(30, 30, 25, 0.35)",
+                                    closeOnClick: true,
+                                },
+                                closeOnEscape: true,
+                                actions: [
+                                    {
+                                        label: "Continue",
+                                        autoFocus: true,
+                                        onClick: ({ toast }) =>
+                                            toast.Close("confirmed"),
+                                    },
+                                    {
+                                        label: "Cancel",
+                                        onClick: ({ toast }) =>
+                                            toast.Close("cancelled"),
+                                    },
+                                ],
+                            });
+                        },
+                    },
+                    {
+                        id: "form",
+                        section: "interaction",
+                        title: "Custom content",
+                        description:
+                            "Create your own content with DOM elements. This small form greets you by name.",
+                        run: () => {
+                            const content = document.createElement("div");
+                            const label = document.createElement("label");
+                            label.htmlFor = "example-name";
+                            label.textContent = "Your name";
+                            Object.assign(label.style, {
+                                display: "block",
+                                marginBottom: "6px",
+                                fontSize: "13px",
+                            });
+                            const input = document.createElement("input");
+                            input.id = "example-name";
+                            input.type = "text";
+                            input.placeholder = "Name";
+                            input.autocomplete = "given-name";
+                            Object.assign(input.style, {
+                                width: "100%",
+                                padding: "9px",
+                                border: "1px solid #c8c7bb",
+                                borderRadius: "5px",
+                                font: "inherit",
+                            });
+                            content.append(label, input);
+                            return Ember.Show({
+                                id: "example-form",
+                                duplicate: "replace",
+                                title: "Say hello",
+                                content,
+                                duration: 0,
+                                layout: "stacked",
+                                actions: [
+                                    {
+                                        label: "Greet",
+                                        onClick: ({ toast }) => {
+                                            toast.Close("greet");
+                                            Ember.Success({
+                                                title: "Hello",
+                                                message:
+                                                    input.value.trim() ||
+                                                    "Welcome!",
+                                            });
+                                        },
+                                    },
+                                ],
+                            });
+                        },
+                    },
+                    {
+                        id: "timer",
+                        section: "interaction",
+                        title: "Control the clock",
+                        description:
+                            "Pause, resume, or restart a 15-second timer. Hovering leaves the timer running here.",
+                        run: () => {
+                            return Ember.Info({
+                                title: "On your time",
+                                message: "Try the controls below.",
+                                duration: 15000,
+                                hover: "none",
+                                layout: "stacked",
+                                actions: [
+                                    {
+                                        label: "Pause",
+                                        onClick: ({ toast }) => toast.Pause(),
+                                    },
+                                    {
+                                        label: "Resume",
+                                        onClick: ({ toast }) => toast.Resume(),
+                                    },
+                                    {
+                                        label: "Restart",
+                                        onClick: ({ toast }) => toast.Restart(),
+                                    },
+                                    {
+                                        label: "Close",
+                                        onClick: ({ toast }) => toast.Close(),
+                                    },
+                                ],
+                            });
+                        },
+                    },
+                    {
+                        id: "dismiss",
+                        section: "interaction",
+                        title: "More ways to dismiss",
+                        description:
+                            "Drag it sideways, click the toast, press Escape, or use its close button.",
+                        run: () => {
+                            return Ember.Info({
+                                title: "All done?",
+                                message:
+                                    "Drag, click, or press Escape to dismiss.",
+                                duration: 0,
+                                draggable: true,
+                                closeOnClick: true,
+                                closeOnEscape: true,
+                            });
+                        },
+                    },
+                    {
+                        id: "ignore",
+                        section: "state",
+                        title: "Ignore duplicates",
+                        description:
+                            "Run this repeatedly. The same ID returns the existing toast instead of stacking another.",
+                        run: () => {
+                            return Ember.Info({
+                                id: "example-ignore",
+                                duplicate: "ignore",
+                                title: "Only one of me",
+                                message:
+                                    "Repeated calls reuse this notification.",
+                                duration: 0,
+                            });
+                        },
+                    },
+                    {
+                        id: "replace",
+                        section: "state",
+                        title: "Replace duplicates",
+                        description:
+                            "Run again to replace the previous message with an updated timestamp.",
+                        run: () => {
+                            return Ember.Success({
+                                id: "example-replace",
+                                duplicate: "replace",
+                                title: "Latest update",
+                                message: new Date().toLocaleTimeString(),
+                                duration: 0,
+                            });
+                        },
+                    },
+                    {
+                        id: "abort",
+                        section: "state",
+                        title: "Cancel with a signal",
+                        description:
+                            "Tie the notification to an AbortSignal. Canceling the operation closes its toast.",
+                        run: () => {
+                            const controller = new AbortController();
+                            return Ember.Info({
+                                title: "Operation in progress",
+                                message: "Cancel when you no longer need it.",
+                                duration: 0,
+                                signal: controller.signal,
+                                actions: [
+                                    {
+                                        label: "Cancel operation",
+                                        onClick: () => controller.abort(),
+                                    },
+                                ],
+                            });
+                        },
+                    },
+                    {
+                        id: "defaults",
+                        section: "state",
+                        title: "Set shared defaults",
+                        description:
+                            "Set top-left placement, stacked text, and a 3-second timer for future toasts. Reset defaults above to start fresh.",
+                        run: () => {
+                            Ember.Configure({
+                                position: "top-left",
+                                layout: "stacked",
+                                duration: 3000,
+                            });
+                            return Ember.Success({
+                                title: "Defaults updated",
+                                message:
+                                    "The next notifications will use these settings.",
+                            });
+                        },
+                    },
+                ];
+
+                const gallery = document.querySelector("#gallery");
+                const status = document.querySelector("#status");
+                const eventLog = document.querySelector("#event-log");
+                const watched = new WeakSet();
+                let eventsStarted = false;
+
+                function setStatus(message, error = false) {
+                    status.textContent = message;
+                    status.dataset.error = String(error);
+                }
+
+                function watch(toast, title) {
+                    if (watched.has(toast)) return;
+                    watched.add(toast);
+                    for (const type of [
+                        "opening",
+                        "opened",
+                        "closing",
+                        "closed",
+                    ]) {
+                        toast.addEventListener(type, (event) => {
+                            if (!eventsStarted) {
+                                eventLog.replaceChildren();
+                                eventsStarted = true;
+                            }
+                            const item = document.createElement("li");
+                            const reason = event.detail.reason
+                                ? ` · ${event.detail.reason}`
+                                : "";
+                            item.textContent = `${new Date().toLocaleTimeString()} · ${title} · ${type}${reason}`;
+                            eventLog.prepend(item);
+                            while (eventLog.children.length > 8)
+                                eventLog.lastElementChild.remove();
+                        });
+                    }
+                }
+
+                function sourceFor(run) {
+                    const lines = run.toString().split("\n");
+                    const indent = lines.at(-1).match(/^\s*/)[0].length;
+                    return `(${lines.map((line, index) => (index === 0 ? line : line.slice(indent))).join("\n")})();`;
+                }
+
+                async function copyCode(source, code, button) {
+                    try {
+                        if (!navigator.clipboard)
+                            throw new Error("Clipboard unavailable");
+                        await navigator.clipboard.writeText(source);
+                        button.textContent = "Copied";
+                        setStatus("Example code copied.");
+                        window.setTimeout(() => {
+                            button.textContent = "Copy code";
+                        }, 1800);
+                    } catch {
+                        const range = document.createRange();
+                        range.selectNodeContents(code);
+                        const selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        setStatus("Code selected. Press Ctrl+C or ⌘C to copy.");
+                    }
+                }
+
+                for (const [index, section] of sections.entries()) {
+                    const region = document.createElement("section");
+                    region.className = "example-section";
+                    region.id = section.id;
+                    region.setAttribute(
+                        "aria-labelledby",
+                        `${section.id}-title`,
+                    );
+                    const heading = document.createElement("div");
+                    heading.className = "section-heading";
+                    const number = document.createElement("span");
+                    number.className = "section-number";
+                    number.textContent = String(index + 1).padStart(2, "0");
+                    const headingText = document.createElement("div");
+                    const title = document.createElement("h2");
+                    title.id = `${section.id}-title`;
+                    title.textContent = section.title;
+                    const description = document.createElement("p");
+                    description.className = "section-description";
+                    description.textContent = section.description;
+                    headingText.append(title, description);
+                    heading.append(number, headingText);
+                    const grid = document.createElement("div");
+                    grid.className = "example-grid";
+
+                    for (const example of examples.filter(
+                        (item) => item.section === section.id,
+                    )) {
+                        const card = document.createElement("article");
+                        card.className = "example-card";
+                        const body = document.createElement("div");
+                        body.className = "card-body";
+                        const marker = document.createElement("div");
+                        marker.className = "card-marker";
+                        marker.setAttribute("aria-hidden", "true");
+                        if (example.marker)
+                            marker.style.setProperty(
+                                "--marker",
+                                example.marker,
+                            );
+                        const cardTitle = document.createElement("h3");
+                        cardTitle.textContent = example.title;
+                        const cardDescription = document.createElement("p");
+                        cardDescription.className = "card-description";
+                        cardDescription.textContent = example.description;
+                        const controls = document.createElement("div");
+                        controls.className = "card-controls";
+                        if (example.select) {
+                            const label = document.createElement("label");
+                            label.className = "select-label";
+                            label.textContent = example.select.label;
+                            const select = document.createElement("select");
+                            select.id = example.select.id;
+                            for (const value of example.select.values) {
+                                const option = document.createElement("option");
+                                option.value = value;
+                                option.textContent = value;
+                                select.append(option);
+                            }
+                            select.value = example.select.value;
+                            label.append(select);
+                            controls.append(label);
+                        }
+                        const runButton = document.createElement("button");
+                        runButton.className = "button primary";
+                        runButton.type = "button";
+                        runButton.dataset.example = example.id;
+                        runButton.textContent = "Run example";
+                        runButton.setAttribute(
+                            "aria-label",
+                            `Run ${example.title.toLowerCase()} example`,
+                        );
+                        runButton.addEventListener("click", () => {
+                            try {
+                                const result = example.run();
+                                for (const toast of Array.isArray(result)
+                                    ? result
+                                    : [result])
+                                    watch(toast, example.title);
+                                setStatus(
+                                    `${example.title} — notification shown.`,
+                                );
+                            } catch (error) {
+                                setStatus(
+                                    `Unable to run this example: ${error.message}`,
+                                    true,
+                                );
+                                throw error;
+                            }
+                        });
+                        controls.append(runButton);
+                        body.append(
+                            marker,
+                            cardTitle,
+                            cardDescription,
+                            controls,
+                        );
+                        const details = document.createElement("details");
+                        details.className = "code-details";
+                        const summary = document.createElement("summary");
+                        summary.textContent = "View code";
+                        const codeActions = document.createElement("div");
+                        codeActions.className = "code-actions";
+                        const copy = document.createElement("button");
+                        copy.className = "button copy-button";
+                        copy.type = "button";
+                        copy.textContent = "Copy code";
+                        copy.setAttribute(
+                            "aria-label",
+                            `Copy ${example.title.toLowerCase()} code`,
+                        );
+                        const pre = document.createElement("pre");
+                        const code = document.createElement("code");
+                        const source = sourceFor(example.run);
+                        code.textContent = source;
+                        copy.addEventListener("click", () =>
+                            copyCode(source, code, copy),
+                        );
+                        pre.append(code);
+                        codeActions.append(copy);
+                        details.append(summary, codeActions, pre);
+                        card.append(body, details);
+                        grid.append(card);
+                    }
+                    region.append(heading, grid);
+                    if (section.id === "layout") {
+                        const panel = document.createElement("div");
+                        panel.className = "target-panel";
+                        const label = document.createElement("p");
+                        label.className = "target-label";
+                        label.textContent = "Container preview";
+                        const target = document.createElement("div");
+                        target.id = "target-area";
+                        const hint = document.createElement("p");
+                        hint.className = "target-hint";
+                        hint.textContent =
+                            "Run “Inside a container” to show a notification here. Run it again to add another.";
+                        panel.append(label, target, hint);
+                        region.append(panel);
+                    }
+                    gallery.append(region);
+                }
+
+                document
+                    .querySelector("#clear-toasts")
+                    .addEventListener("click", async () => {
+                        await Ember.Clear();
+                        setStatus(
+                            "Notifications cleared. Shared defaults are unchanged.",
+                        );
+                    });
+                document
+                    .querySelector("#reset-defaults")
+                    .addEventListener("click", () => {
+                        Ember.Destroy();
+                        document.querySelector("#position").value =
+                            "bottom-right";
+                        document.querySelector("#animation").value = "slide";
+                        eventLog.replaceChildren();
+                        const placeholder = document.createElement("li");
+                        placeholder.textContent =
+                            "Run an example to see its lifecycle.";
+                        eventLog.append(placeholder);
+                        eventsStarted = false;
+                        setStatus("Defaults reset and notifications cleared.");
+                    });
+
+                const controls = document.querySelectorAll(
+                    "[data-example], #clear-toasts, #reset-defaults, select",
+                );
+                for (const control of controls) control.disabled = true;
+                status.dataset.state = "loading";
+                try {
+                    const response = await fetch(
+                        "https://raw.githubusercontent.com/rah-0/ember/master/Ember.js",
+                    );
+                    if (!response.ok)
+                        throw new Error(
+                            `GitHub returned HTTP ${response.status}.`,
+                        );
+                    const url = URL.createObjectURL(
+                        new Blob([await response.text()], {
+                            type: "text/javascript",
+                        }),
+                    );
+                    try {
+                        await import(url);
+                    } finally {
+                        URL.revokeObjectURL(url);
+                    }
+                    if (!window.Ember)
+                        throw new Error("The script did not initialize Ember.");
+                    for (const control of controls) control.disabled = false;
+                    status.dataset.state = "ready";
+                    setStatus("Ready. Pick an example to begin.");
+                } catch (error) {
+                    status.dataset.state = "error";
+                    setStatus(
+                        `Ember could not load. ${error.message} Check your connection and reload the page.`,
+                        true,
+                    );
+                }
+            })();
+        </script>
+    </body>
+</html>
