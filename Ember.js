@@ -30,7 +30,7 @@ window.Ember = (function () {
         success: '<path d="m4 12 5 5L20 6"/>',
         question:
             '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v1"/>',
-        close: '<path d="m5 5 14 14m0-14L5 19"/>',
+        close: '<path d="m5 5 14 14m0-14L5 19" stroke-width="3"/>',
     };
     const defaults = Object.freeze({
         id: null,
@@ -516,9 +516,9 @@ window.Ember = (function () {
                 backgroundImage: iconImage("close", foreground),
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "8px",
+                backgroundSize: "20px",
                 cursor: "pointer",
-                opacity: "0.65",
+                opacity: "0.8",
             });
             dom.close.type = "button";
             dom.close.setAttribute("aria-label", "Close notification");
@@ -837,7 +837,7 @@ window.Ember = (function () {
                     close.style.opacity = "1";
                 });
                 on(close, "mouseleave", () => {
-                    close.style.opacity = "0.65";
+                    close.style.opacity = "0.8";
                 });
             }
             if (options.closeOnEscape)

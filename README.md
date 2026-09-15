@@ -41,10 +41,10 @@ the loader fetches the source and imports a JavaScript Blob, then releases its
 temporary URL. This avoids a third-party CDN or GitHub Pages setup.
 
 Download and open [examples/index.html](examples/index.html) in a browser for
-23 runnable examples with code snippets: toast types, positioning, custom styles,
-light/dark themes, animations, actions, forms, timer controls, overlays, duplicate
-handling, cancellation, and shared defaults. The gallery loads Ember from the
-same raw GitHub URL.
+24 runnable examples with code snippets: toast types, positioning, multi-line
+layouts, custom styles, light/dark themes, animations, actions, forms, timer
+controls, overlays, duplicate handling, cancellation, and shared defaults. The
+gallery loads Ember from the same raw GitHub URL.
 
 ### API
 

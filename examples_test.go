@@ -51,7 +51,7 @@ func TestExamples(t *testing.T) {
 
 	examples := []string{
 		"basic", "success", "info", "warning", "error", "question", "position",
-		"stacked", "rtl", "target", "themes", "styled", "icon", "animation",
+		"stacked", "multiline", "rtl", "target", "themes", "styled", "icon", "animation",
 		"undo", "confirm", "form", "timer", "dismiss", "ignore", "replace", "abort", "defaults",
 	}
 	for _, name := range examples {
@@ -59,6 +59,9 @@ func TestExamples(t *testing.T) {
 			page := newExamplesPage(t, browser, server.URL, source)
 			if count := evaluate[int](t, page, `() => document.querySelectorAll("[data-example]").length`); count != len(examples) {
 				t.Fatalf("gallery has %d examples; smoke test covers %d", count, len(examples))
+			}
+			if name == "multiline" {
+				setViewport(t, page, 1280, 900)
 			}
 			clickElement(t, page, `[data-example="`+name+`"]`)
 			waitJS(t, page, `() => document.querySelector(".ember") !== null`)
@@ -68,6 +71,9 @@ func TestExamples(t *testing.T) {
 			}`)
 			if name == "target" {
 				assertJS(t, page, "target example should render inside its preview area", `() => document.querySelector("#target-area .ember") !== null`)
+			}
+			if name == "multiline" {
+				assertMultilineExample(t, page)
 			}
 			if name == "timer" {
 				for _, label := range []string{"Pause", "Resume", "Restart", "Close"} {
@@ -126,6 +132,9 @@ func TestExamples(t *testing.T) {
 		assertJS(t, page, "gallery should fit a narrow viewport without horizontal scrolling", `() => document.documentElement.scrollWidth <= window.innerWidth`)
 		clickElement(t, page, `[data-example="success"]`)
 		waitJS(t, page, `() => document.querySelector(".ember") !== null`)
+		runJS(t, page, `async () => { await Ember.Clear(); }`)
+		clickElement(t, page, `[data-example="multiline"]`)
+		assertMultilineExample(t, page)
 	})
 
 	t.Run("script load failure", func(t *testing.T) {
@@ -150,6 +159,28 @@ func TestExamples(t *testing.T) {
 		clickElement(t, page, `[data-example="success"]`)
 		waitJS(t, page, `() => document.querySelector(".ember") !== null`)
 	})
+}
+
+func assertMultilineExample(t *testing.T, page *rod.Page) {
+	t.Helper()
+	waitJS(t, page, `() => {
+		const toast = document.querySelector(".ember");
+		return toast !== null && toast.getAnimations().length === 0;
+	}`)
+	assertJS(t, page, "large toast should show a title above a multiline body and fit the viewport", `() => {
+		const toast = document.querySelector(".ember");
+		const title = toast.querySelector(".ember-title");
+		const message = toast.querySelector(".ember-message");
+		const bounds = toast.getBoundingClientRect();
+		const titleBounds = title.getBoundingClientRect();
+		const messageBounds = message.getBoundingClientRect();
+		const lineHeight = Number.parseFloat(getComputedStyle(message).lineHeight);
+		return title.textContent.length > 0 && titleBounds.bottom <= messageBounds.top &&
+			messageBounds.height >= lineHeight * 4 && bounds.width > 300 && bounds.height > 180 &&
+			bounds.left >= 0 && bounds.top >= 0 &&
+			bounds.right <= window.innerWidth && bounds.bottom <= window.innerHeight &&
+			toast.scrollWidth <= toast.clientWidth && toast.scrollHeight <= toast.clientHeight;
+	}`)
 }
 
 func clickExampleAction(t *testing.T, page *rod.Page, label string) {

@@ -465,7 +465,7 @@
                         <h1 id="page-title">Make it a toast.</h1>
                         <p class="intro">
                             A little feedback goes a long way. Explore
-                            <strong>23 working examples</strong>, from a quick
+                            <strong>24 working examples</strong>, from a quick
                             confirmation to custom content and controls. One
                             JavaScript file, with styles built in.
                         </p>
@@ -711,6 +711,38 @@
                                 layout: "stacked",
                                 maxWidth: 380,
                             });
+                        },
+                    },
+                    {
+                        id: "multiline",
+                        section: "layout",
+                        title: "A bigger, multi-line toast",
+                        description:
+                            "A heading above three paragraphs, with room to read. This toast stays open until you close it and adapts to the viewport.",
+                        run: () => {
+                            const toast = Ember.Show({
+                                title: "Your workspace is ready",
+                                message: [
+                                    "Everything is in place for your next project. Your files have been synced, your preferences have been saved, and your team can start working together.",
+                                    "You can invite collaborators, organize your first tasks, or take a look around before getting started. Changes are saved as you go, so you can come back whenever you are ready.",
+                                    "Need a moment to read through the details? This notification stays open until you close it.",
+                                ].join("\n\n"),
+                                layout: "stacked",
+                                maxWidth: 560,
+                                duration: 0,
+                                closeOnEscape: true,
+                            });
+                            toast.Element.style.lineHeight = "1.6";
+                            toast.Element.querySelector(
+                                ".ember-title",
+                            ).style.fontSize = "18px";
+                            toast.Element.querySelector(
+                                ".ember-texts",
+                            ).style.rowGap = "12px";
+                            toast.Element.querySelector(
+                                ".ember-message",
+                            ).style.whiteSpace = "pre-line";
+                            return toast;
                         },
                     },
                     {
