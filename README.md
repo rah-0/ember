@@ -144,8 +144,6 @@ parses strings as HTML. Caller-created content can still load external resources
 or execute its own handlers. Custom nodes and targets must belong to the current
 document. An already aborted signal leaves supplied custom nodes untouched.
 
-See [API migration](doc/BREAKING.md) for changes from the iziToast-shaped API.
-
 ## Minify
 
 Run from the repository root:
@@ -201,3 +199,9 @@ or publishing changes first, including a failed request and its disabled control
 
 Ember derives from iziToast v1.4.0 by Marcelo Dolce and is distributed under
 [Apache-2.0](LICENSE). See [NOTICE](NOTICE) for attribution.
+
+## ☕ Support
+
+🔥 **Like your toasts hot and your dependencies at zero?** Buy me a coffee and help keep Ember burning. Your UI gets the toasts; I get the caffeine. ☕
+
+[![Buy Me A Coffee](https://cdn.buymeacoffee.com/buttons/default-orange.png)](https://www.buymeacoffee.com/rah.0)
