@@ -4,7 +4,9 @@ Self-contained JavaScript toast notifications, with Go and Rod browser tests.
 
 Load [Ember.js](Ember.js) directly. Ember applies styles to each element and uses
 the Web Animations API for motion. It creates no stylesheet and needs no CSS,
-LESS, JavaScript dependencies, or build step. Built-in icons are embedded.
+LESS, JavaScript dependencies, or build step. Built-in icons are embedded SVGs
+with opaque, type-specific fills and contrasting symbols that remain readable
+in both themes and on custom toast backgrounds.
 
 ## Usage
 

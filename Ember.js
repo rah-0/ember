@@ -24,12 +24,21 @@ window.Ember = (function () {
         question: "rgba(255,249,178,0.9)",
     };
     const IconPaths = {
-        info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/>',
-        warning: '<path d="M12 3 2 21h20L12 3Zm0 6v5m0 3v1"/>',
-        error: '<circle cx="12" cy="12" r="9"/><path d="m9 9 6 6m0-6-6 6"/>',
-        success: '<path d="m4 12 5 5L20 6"/>',
+        info:
+            '<circle cx="12" cy="12" r="10" fill="#2563eb" stroke="none"/>' +
+            '<path d="M12 11v6" stroke="#fff"/><circle cx="12" cy="7" r="1" fill="#fff" stroke="none"/>',
+        warning:
+            '<path d="M12 3 2 21h20L12 3Z" fill="#f59e0b" stroke="#f59e0b"/>' +
+            '<path d="M12 9v5" stroke="#451a03"/><circle cx="12" cy="17" r="1" fill="#451a03" stroke="none"/>',
+        error:
+            '<circle cx="12" cy="12" r="10" fill="#dc2626" stroke="none"/>' +
+            '<path d="m9 9 6 6m0-6-6 6" stroke="#fff"/>',
+        success:
+            '<circle cx="12" cy="12" r="10" fill="#15803d" stroke="none"/>' +
+            '<path d="m7 12 3 3 7-7" stroke="#fff"/>',
         question:
-            '<circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5m0 3v1"/>',
+            '<circle cx="12" cy="12" r="10" fill="#facc15" stroke="none"/>' +
+            '<path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 5" stroke="#422006"/><circle cx="12" cy="17" r="1" fill="#422006" stroke="none"/>',
         close: '<path d="m5 5 14 14m0-14L5 19" stroke-width="3"/>',
     };
     const defaults = Object.freeze({
@@ -426,8 +435,10 @@ window.Ember = (function () {
             if (options.icon) icon.append(options.icon);
             else {
                 Object.assign(icon.style, {
+                    width: "28px",
+                    height: "28px",
                     backgroundImage: iconImage(options.type, foreground),
-                    backgroundSize: "85%",
+                    backgroundSize: "100%",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                 });
